@@ -18,7 +18,8 @@ jobs:
 
       - name: Install yarn dependencies
         run: yarn install
-        
+             yarn.lock 
+
       - name: Run build task
         run:  yarn build:dev
       - name: Configure AWS credentials
