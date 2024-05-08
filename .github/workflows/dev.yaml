@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -15,9 +16,8 @@ jobs:
           node-version: '16.x'
           cache: 'yarn'
 
-      - name: Install yarn dependencies 
+      - name: Install yarn dependencies
         run: yarn install
-
       - name: Run build task
         run:  yarn build:dev
       - name: Configure AWS credentials
