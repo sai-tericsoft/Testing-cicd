@@ -1,36 +1,32 @@
-name: CI/CD Workflow
+name: ADMIN TEST CI&CD setup
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+    tags:
+      - "*"
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the repository code
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Step 2: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v1
+      - name: Install Node.js
+        uses: actions/setup-node@v1
         with:
-          node-version: '16' # Use a specific Node.js version or define a variable
+          node-version: "14.x"
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: npm install
+      - name: Yarn install cache
+        uses: c-hive/gha-yarn-cache@v1
+        with:  
+          node-version: '14.x' 
+          cache: 'yarn'  
+      - name: Install yarn dependencies
+        run: yarn install
+      - name: Run build task
+        run: yarn build:test
 
-      # Step 4: Build the project
-      - name: Build project
-        run: npm run build # Adjust to your build command
-
-      # Step 5: Run tests
-      - name: Run tests
-        run: npm test # Adjust to your test command
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
